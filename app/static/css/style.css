@@ -1,0 +1,71 @@
+@font-face {
+    font-family: "Glyphicons Halflings";
+    src: url("../fonts/glyphicons-halflings-regular.woff2");
+}
+
+.container {
+    margin-top: 20px;
+}
+
+thead {
+    background-color: rgba(244, 67, 54, 0.85);
+    color: #fff;
+}
+
+mark {
+    background-color: #f4f57a;
+    padding: 0;
+}
+
+button.dt-button, div.dt-button, a.dt-button {
+    padding: 0.3em 0.3em;
+}
+
+td {
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.highlight {
+    background-color: yellow; /* Яркий фон */
+    color: black; /* Цвет текста */
+    padding: 2px 4px; /* Небольшие отступы вокруг текста */
+    border-radius: 3px; /* Закругленные углы */
+    transition: background-color 0.3s ease; /* Плавный переход цвета фона */
+}
+
+.highlight:hover {
+    background-color: orange; /* Изменение цвета при наведении */
+}
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    z-index: 1000;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading::after {
+    content: '';
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}

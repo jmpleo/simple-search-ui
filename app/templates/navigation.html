@@ -1,0 +1,11 @@
+<ul class="nav nav-tabs card-header-tabs">
+    <li class="nav-item">
+        <a href="/" class="nav-link {% if location == '/search' or location == '/' %}active{% endif %}">поиск</a>
+    </li>
+    <li class="nav-item">
+        <a href="/unloading" class="nav-link {% if location == '/unloading' %}active{% endif %}">выгрузка</a>
+    </li>
+    <li class="nav-item">
+        <a href="/api" class="nav-link {% if location == '/api' %}active{% endif %}">api</a>
+    </li>
+</ul>

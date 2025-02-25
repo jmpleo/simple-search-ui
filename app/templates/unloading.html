@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% include 'styles.html' %}
+    <title>{{ name }}</title>
+</head>
+<body class="container mt-2">
+    <div class="card text-center">
+        <div class="card-header">
+            {% include 'navigation.html' %}
+        </div>
+        <div class="card-body p-2">
+            {% include 'spin.html' %}
+            {% include 'error.html' %}
+            <form class="form-inline" id="unloadForm"> <!-- method="GET" action="/unloading/start"-->
+                <div class="input-group my-2 mx-auto w-100">
+                    <div class="btn-group w-100">
+                        {% include 'select_tables.html' %} <!-- require tables: dict, t: str -->
+                        <input type="text" class="form-control" name="q" id="queryInput" value="{{ q }}"
+                            placeholder="жми на '?', чтобы узнать синтаксис полнотекстового запроса">
+                        <a href="https://manual.manticoresearch.com/Searching/Full_text_matching/Operators"
+                         class="btn btn-secondary" target="_blank">?</a>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" type="submit">выгрузить</button>
+                    </div>
+                </div>
+            </form>
+            <table id="maintable" class="display compact cell-border" cellspacing="0" width="100%">
+            <!--table class="table table-striped mt-2" id="unloadingTable"-->
+                <thead>
+                <tr>
+                    <th>query</th>
+                    <th>status</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for task in data %}
+                    <tr>
+                        <td style="text-align: left; margin-left: 3px;">
+                            <code class="query">{{ task.info.q }}</code>
+                            <a href="#" class="btn btn-secondary btn-sm disabled" tabindex="-1" aria-disabled="true">
+                            {{ task.info.t }}
+                            </a>
+                        </td>
+                        <td>
+                            <div class="taskprocess" data-task-id="{{ task.task_id }}">
+                                <a href="#" class="btn btn-secondary btn-sm disabled taskworking" style="display: none" tabindex="-1" aria-disabled="true">
+                                </a>
+                                <a href="#" class="btn btn-secondary btn-sm disabled tasktotal" tabindex="-1" aria-disabled="true" style="display: none">
+                                </a>
+                                <a class="badge badge-danger btn btn-sm taskerror" style="display: none">
+                                    error
+                                </a>
+                                <a href="/unloading/data/{{ task.task_id | urlencode }}.json" class="btn btn-secondary btn-sm taskjson" style="display: none">
+                                    json
+                                </a>
+                                <a href="/unloading/data/{{ task.task_id | urlencode }}.csv" class="btn btn-secondary btn-sm taskcsv" style="display: none">
+                                    csv
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot style="background-color: #c0c0c0; color: #ffffff;">
+                    <tr>
+                        <th>query</th>
+                        <th>content</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+    {% include 'scripts.html' %}
+</body>
+
+</html>

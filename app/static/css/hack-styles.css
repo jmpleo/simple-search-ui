@@ -1,0 +1,271 @@
+@font-face {
+    font-family: "Glyphicons Halflings";
+    src: url("../fonts/glyphicons-halflings-regular.woff2");
+}
+
+@font-face {
+    font-family: 'JetBrainsTest';
+    src: url('/static/fonts/JetBrainsMono-Regular.woff2') format('woff2'),
+         url('/static/fonts/JetBrainsMono-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    color: #00c000;
+    font-family: 'JetBrainsTest', 'Arial', sans-serif;
+    background-image: url('/static/images/bg.png');
+    background-color: #000;
+}
+
+button, input, optgroup, select, textarea {
+    font-family: 'JetBrainsTest', 'Arial', sans-serif;
+}
+
+.card {
+    color: #00c000;
+    background-color: #00000085;
+    border: 1px solid rgba(0, 255, 28, 0.89);
+}
+
+code, .query {
+    padding: .2rem .4rem;
+    font-size: 90%;
+    color: #ecd200;
+    background-color: #000;
+    border-radius: .25rem;
+    border: 1px solid #0c4800;
+}
+
+.btn-secondary.disabled, .btn-secondary:disabled {
+    background-color: #463802ab;
+    border-color: #755d00;
+    color: #ecd200;
+}
+
+.card-header {
+    color: #00c000;
+    background-color: #000;
+    border-bottom: 1px solid rgb(13, 70, 1);
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #00c000;
+    background-color: #000;
+    border-color: rgb(13, 70, 1);
+}
+
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    color: #00c000;
+    border-color: rgba(0, 255, 28, 0.89);
+}
+
+
+.alert-danger {
+    background-color: #2f070766;
+    border-color: #400;
+    color: #b33939;
+}
+
+a.badge-danger {
+    background-color: #2f070766;
+    border-color: #400;
+    color: #b33939;
+}
+
+a.badge-danger:focus, a.badge-danger:hover, .badge-danger[href]:focus, .badge-danger[href]:hover {
+    background-color: #400;
+    border-color: #400;
+    color: #b33939;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+a {
+    color: rgb(13, 70, 1);
+}
+
+a:focus, a:hover {
+    color: rgba(0, 255, 28, 0.89);
+    text-decoration: underline;
+}
+
+table.dataTable.display tbody tr:hover > .sorting_1,
+table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
+    color: #ecd200;
+    background-color: #000;
+    border: 1px solid #ecd200;
+    font-size: larger;
+}
+
+table.dataTable tbody tr,
+table.dataTable.display tbody tr.even > .sorting_1, table.dataTable.order-column.stripe tbody tr.even > .sorting_1
+{
+    background-color: #000;
+}
+
+table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd,
+table.dataTable.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1
+{
+    background-color: #0a1707;
+}
+
+table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
+    color: #00c000;
+    background-color: #000;
+    border: 1px solid rgb(34, 149, 11);
+}
+
+
+table.dataTable.cell-border tbody tr th:first-child, table.dataTable.cell-border tbody tr td:first-child
+{
+    border-left: 1px solid #000;
+}
+
+
+table.dataTable.cell-border tbody th, table.dataTable.cell-border tbody td {
+    border-top: 1px solid #000;
+    border-right: 1px solid #000;
+}
+
+tr:hover > .sorting_1 {
+    background-color: #000;
+}
+
+.digits {
+    /* border: 1px solid #4aa2bd; */
+    color: #55dfff;
+    border-radius: 3px;
+    background-color: #090e134f;
+}
+
+.specs {
+    /*border: 1px solid #bd6d4a;*/
+    color: #bd6d4a;
+    border-radius: 3px;
+    background-color: #090e134f;
+    font-weight: bold;
+}
+
+.custom-select, .btn, .dt-button,
+table, th, tr, td, input, label,
+button.dt-button, div.dt-button, a.dt-button {
+    color: #00c000;
+    background-color: #000;
+    border: 1px solid rgb(13, 70, 1);
+}
+
+.form-control {
+    color: #ecd200;
+    background-color: #000;
+    border: 1px solid rgb(13, 70, 1);
+}
+
+.form-control:hover, .form-control:focus{
+    color: #ecd200;
+    background-color: #021a00;
+    border: 1px solid rgb(13, 70, 1);
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    color: #00c000 !important;
+    border: 1px solid #008415;
+    background: #0b2207;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover .paginate_button.current:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+
+    color: #006300;
+    border: 1px solid #00510e;
+    background: #00000000;
+}
+
+.custom-select:hover, .btn:hover, .dt-button:hover,
+button.dt-button:hover, div.dt-button:hover, a.dt-button:hover {
+    color: #00c000;
+    background-color: #000;
+    border: 1px solid rgba(0, 255, 28, 0.89);
+}
+
+button.dt-button, div.dt-button, a.dt-button,
+button.dt-button:hover, div.dt-button:hover, a.dt-button:hover {
+    background-image: linear-gradient(to bottom, #000 0%, #000 100%);
+}
+
+
+div.dt-button:active:not(.disabled), a.dt-button:active:not(.disabled), a.dt-button.active:not(.disabled):hover:not(.disabled),button.dt-button:active:not(.disabled):hover:not(.disabled), a.dt-button.active:not(.disabled),button.dt-button:hover:not(.disabled), button.dt-button.active:not(.disabled):hover:not(.disabled),button.dt-button:active:not(.disabled), div.dt-button:hover:not(.disabled), div.dt-button.active:not(.disabled), div.dt-button:active:not(.disabled):hover:not(.disabled), a.dt-button:active:not(.disabled):hover:not(.disabled), a.dt-button:hover:not(.disabled), button.dt-button.active:not(.disabled), div.dt-button.active:not(.disabled):hover:not(.disabled)
+{
+    background-color: #000;
+    background-image: linear-gradient(to bottom, #000 0%, #000 100%);
+}
+
+
+.container {
+    margin-top: 20px;
+}
+
+thead {
+    background-color: rgba(244, 67, 54, 0.85);
+    color: #fff;
+}
+
+mark {
+    background-color: #f4f57a;
+    padding: 0;
+}
+
+button.dt-button, div.dt-button, a.dt-button {
+    padding: 0.3em 0.3em;
+}
+
+td {
+    max-width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.highlight {
+    background-color: #d0b90030;
+    color: yellow;
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+    border: 1px solid #ffbf00;
+}
+
+.highlight:hover {
+    background-color: rgba(255, 242, 0, 0.54); /* Изменение цвета при наведении */
+}
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.76);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    z-index: 1000;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading::after {
+    content: '';
+    border: 8px solid rgba(0, 151, 80, 0.29);
+    border-top: 8px solid rgb(136, 121, 3);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}

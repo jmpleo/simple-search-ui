@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% include 'styles.html' %}
+    <title>{{ name }}</title>
+</head>
+<body class="container mt-2">
+    <div class="card text-center">
+        <div class="card-header">
+            {% include 'navigation.html' %}
+        </div>
+        <div class="card-body p-2">
+            <h2 class="text-center my-2">
+                <a href="/"><img src="images/drops.png" class="rounded" alt="💦💦💦" style="width: 100px; height: auto;"></a>
+                {% if q %}
+                    Срезано {{ mm | min(total) }} строк (всего {{ total }}) для запроса <code class="query">{{ q }}</code> за {{ took }} ms
+                {% else %}
+                    {{ name }}
+                {% endif %}
+            </h2>
+            {% include 'error.html' %}
+            {% include 'spin.html' %}
+            <form class="form-inline" id="searchForm"> <!--method="GET" action="/search"-->
+                <div class="input-group w-100 my-3">
+                    <div class="btn-group w-100">
+                        {% include 'select_tables.html' %} <!-- require tables: dict, t: str -->
+                        <select class="custom-select btn btn-secondary h-100"
+                            id="maxMatchesInput" name="mm" title="срезка">
+                            {% for n in [100, 500, 1000, 5000, 10000] %}
+                                <option value="{{ n }}" {% if mm == n %}selected{% endif %}>
+                                    {{ n }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" class="form-control" name="q" id="queryInput" value="{{ q }}"
+                            placeholder="жми на '?', чтобы узнать синтаксис полнотекстового запроса">
+                        <a href="https://github.com/manticoresoftware/manticoresearch/blob/30735a4c577dd93706c373e7a62b6c2c24400685/manual/Searching/Full_text_matching/Operators.md"
+                            class="btn btn-secondary" target="_blank">?</a>
+                    </div>
+                    {% if total > 0 %}
+                    <div class="btn-group ml-1">
+                        <a href="/unloading/start?t={{ t | urlencode }}&q={{ q | urlencode }}"
+                        class="btn h-100 btn-secondary" title="выгрузка" target="_blank">
+                             выгрузить ({{ total | reduce_large_number }})
+                        </a>
+                    </div>
+                    <div class="btn-group ml-1">
+                        <select class="custom-select btn btn-secondary h-100" id="pageInput" title="fetch next portion" data-toggle="tooltip" data-placement="right">
+                            {% set result_n = mm | min(total) %}
+                            {% for p in range(0, (result_n // limit) + (0 if result_n % limit == 0 else 1)) %}
+                                <option value="{{ p }}" {% if p == page %}selected{% endif %}>
+                                    {% if p == page %}=>{% endif %}
+                                    {{ (limit * p) | min(result_n) }}
+                                    ...
+                                    {{ (limit * (p + 1)) | min(result_n) }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                </div>
+            </form>
+            <table id="maintable" class="display compact cell-border rawtable" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    {% if t in tables %}
+                        {% for field in tables[t].fields %}
+                        <th>{{ field }}</th>
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        {% for item in row %}
+                        <td>{{ item | tag | safe }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot style="background-color: #c0c0c0; color: #ffffff; font-size: 0.9em;">
+                <tr>
+                    {% if t in tables %}
+                        {% for field in tables[t].fields %}
+                        <th>{{ field }}</th>
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+    {% include 'scripts.html' %}
+</body>
+
+</html>
