@@ -222,6 +222,7 @@ button.dt-button, div.dt-button, a.dt-button {
 }
 
 td {
+    text-align: left;
     max-width: 200px;
     overflow-wrap: break-word; /* Перенос слов, если они слишком длинные */
     white-space: normal; /* Нормальный перенос текста */
