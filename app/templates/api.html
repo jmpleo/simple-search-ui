@@ -13,51 +13,27 @@
             {% include 'navigation.html' %}
         </div>
         <div class="card-body p-2">
-            <div class="card p-2 mb-1">
+            {% for method in data %}
+            <div class="card p-2 mb-3 mx-1 api-desc">
                 <p class="card-text">
-                    GET: <code>/api/v1/search?<strong>q</strong>=&amp;<strong>t</strong>=&amp;<strong>p</strong>=&amp;<strong>mm</strong>=&amp;<strong>l</strong>=</code>
+                    {{ method.http_method }}: <code>{{ method.prefix + method.path }}</code>
                 </p>
-                <p>Поиск с параметрами как на вкладке /search</p>
                 <ul>
-                    <li><strong class="query">q</strong>: query string</li>
-                    <li><strong class="query">t</strong>: table</li>
-                    <li><strong class="query">p</strong>: portion (page)</li>
-                    <li><strong class="query">mm</strong>: max matches (max search results)</li>
-                    <li><strong class="query">l</strong>: limit of portion (page)</li>
+                    {% if method.parameters %}
+                        {% for param in method.parameters %}
+                        <li><strong class="query">{{ param.name }}</strong>: {{ param.description }}</li>
+                        {% endfor %}
+                    {% else %}
+                    {% endif %}
                 </ul>
+                <!-- <p style="border-bottom: 1px solid;"></p> -->
+                {% for response in method.json_responses %}
+                <textarea class="response w-100 mb-1" rows="4" readonly>{{ response }}</textarea>
+                {% endfor %}
             </div>
-            <div class="card p-2 mb-1">
-                <p class="card-text">
-                    GET: <code>/api/v1/unloading/start?<strong>t</strong>=&amp;<strong>q</strong>=</code>
-                </p>
-                <p>Запуск задачи на загрузку в фоновом режиме</p>
-                <ul>
-                    <li><strong class="query">q</strong>: query string</li>
-                    <li><strong class="query">t</strong>: table</li>
-                </ul>
-            </div>
-            <div class="card p-2 mb-1">
-                <p class="card-text">
-                    GET: <code>/api/v1/unloading/status/<strong>{task_id}</strong></code>
-                </p>
-                <p>Проверка статуса задачи</p>
-                <ul>
-                    <li><strong class="query">task_id</strong>: id задачи, возращаемый в методе <code>/api/v1/unloading/status</code></li>
-                </ul>
-            </div>
-            <div class="card p-2 mb-1">
-                <p class="card-text">
-                    GET: <code>/api/v1/unloading/data/<strong>{task_id}.{ext}</strong></code>
-                </p>
-                <p>Выгрузка готовых задач</p>
-                <ul>
-                    <li><strong class="query">task_id</strong>: id задачи, возращаемый в методе <code>/api/v1/unloading/status</code></li>
-                    <li><strong class="query">ext</strong>: формат выгружаемого файла. (<code>json</code>|<code>csv</code>)</li>
-                </ul>
-            </div>
+            {% endfor %}
         </div>
     </div>
-
 </div>
 {% include 'scripts.html' %}
 </body>

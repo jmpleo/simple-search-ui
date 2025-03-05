@@ -13,6 +13,10 @@ aioredis = "*"
 bleach = "*"
 python-dotenv = "*"
 loguru = "*"
+pydantic-settings = "*"
+manticoresearch = {ref = "7.0.0", git = "https://github.com/manticoresoftware/manticoresearch-python.git"}
+aiofiles = "*"
+python-multipart = "*"
 
 [dev-packages]
 

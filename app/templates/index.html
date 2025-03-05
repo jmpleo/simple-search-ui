@@ -3,64 +3,89 @@
 <head>
     <meta charset="UTF-8">
     {% include 'styles.html' %}
-    <title>{{ name }}</title>
+    <title>{{ name }}{% if q %} - {{ q }}{% endif %}</title>
 </head>
-<body class="container mt-2">
+<body class="mt-2 mx-auto">
     <div class="card text-center">
         <div class="card-header">
             {% include 'navigation.html' %}
         </div>
         <div class="card-body p-2">
             <h2 class="text-center my-2">
-                <a href="/"><img src="images/drops.png" class="rounded" alt="💦💦💦" style="width: 100px; height: auto;"></a>
-                {% if q %}
-                    Срезано {{ mm | min(total) }} строк (всего {{ total }}) для запроса <code class="query">{{ q }}</code> за {{ took }} ms
+                {% if error is not none %}
+                <a href="/"><img src="images/rover-simple.gif" class="m-auto mb-2 rounded" alt="" style="height: 100px; width: auto;"></a>
                 {% else %}
-                    {{ name }}
+                    <a href="/"><img src="images/rover.gif" class="m-auto mb-2 rounded" alt="" style="height: 100px; width: auto;"></a>
+                    <span class="logo">simple</span>search
                 {% endif %}
             </h2>
             {% include 'error.html' %}
             {% include 'spin.html' %}
-            <form class="form-inline" id="searchForm"> <!--method="GET" action="/search"-->
-                <div class="input-group w-100 my-3">
+            <form class="form-inline mt-2" id="searchForm"> <!--method="GET" action="/search"-->
+                {% if q and not error %}
+                <div class="btn-group mb-1">
+                    <span class="badge metric">время поиска:<span class="badge metric value time" data-value="{{ took }}">0</span></span>
+                    <span class="badge metric">срез:<span class="badge metric value big-number" data-value="{{ mm | min(total) }}">0</span></span>
+                    <span class="badge metric">всего:<span class="badge metric value big-number" data-value="{{ total }}">0</span></span>
+                    {% if t in tables %}
+                        <span class="badge metric">всего в {{ t }}:<span class="badge metric value big-number" data-value="{{ tables[t].count }}" >0</span></span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="input-group w-100 mb-3">
                     <div class="btn-group w-100">
-                        {% include 'select_tables.html' %} <!-- require tables: dict, t: str -->
-                        <select class="custom-select btn btn-secondary h-100"
-                            id="maxMatchesInput" name="mm" title="срезка">
-                            {% for n in [100, 500, 1000, 5000, 10000] %}
-                                <option value="{{ n }}" {% if mm == n %}selected{% endif %}>
-                                    {{ n }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        <input type="text" class="form-control" name="q" id="queryInput" value="{{ q }}"
-                            placeholder="жми на '?', чтобы узнать синтаксис полнотекстового запроса">
                         <a href="https://github.com/manticoresoftware/manticoresearch/blob/30735a4c577dd93706c373e7a62b6c2c24400685/manual/Searching/Full_text_matching/Operators.md"
-                            class="btn btn-secondary" target="_blank">?</a>
-                    </div>
-                    {% if total > 0 %}
-                    <div class="btn-group ml-1">
-                        <a href="/unloading/start?t={{ t | urlencode }}&q={{ q | urlencode }}"
-                        class="btn h-100 btn-secondary" title="выгрузка" target="_blank">
-                             выгрузить ({{ total | reduce_large_number }})
-                        </a>
-                    </div>
-                    <div class="btn-group ml-1">
-                        <select class="custom-select btn btn-secondary h-100" id="pageInput" title="fetch next portion" data-toggle="tooltip" data-placement="right">
-                            {% set result_n = mm | min(total) %}
+                            class="btn btn-lg btn-secondary" target="_blank">?</a>
+                        <input type="text" class="form-control form-control-lg" name="q" id="queryInput" value="{{ q }}"
+                            placeholder='="gov.ru"'>
+                        <select class="custom-select h-100 btn btn-lg btn-secondary"
+                        id="maxMatchesInput" name="mm" title="срезка">
+                        {% for n in [100, 250, 500, 750, 1000, 2500, 5000] %}
+                            <option value="{{ n }}" {% if mm == n %}selected{% endif %}>
+                                {{ n }}
+                            </option>
+                        {% endfor %}
+                        </select>
+
+                        {% set result_n = mm | min(total) %}
+                        {% if q and result_n > 0 and result_n > limit %}
+                        <!-- <a id="pageInput" class="btn btn-lg btn-secondary" value="{{ page + 1 }}">
+                            |> {{ (limit * (page + 1)) | min(result_n) }}
+                            ...
+                            {{ (limit * (page + 2)) | min(result_n) }}
+                        </a> -->
+                        <select class="custom-select btn h-100 btn-lg btn-secondary"
+                            id="pageInput" title="fetch next portion" data-toggle="tooltip" data-placement="right">
                             {% for p in range(0, (result_n // limit) + (0 if result_n % limit == 0 else 1)) %}
                                 <option value="{{ p }}" {% if p == page %}selected{% endif %}>
-                                    {% if p == page %}=>{% endif %}
+                                    {% if p == page %}|>{% endif %}
                                     {{ (limit * p) | min(result_n) }}
                                     ...
                                     {{ (limit * (p + 1)) | min(result_n) }}
                                 </option>
                             {% endfor %}
                         </select>
+                        {% else %}
+                        <button class="btn btn-lg btn-secondary" type="submit">|></button>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="input-group w-100 mb-4">
+                    <div class="btn-group w-100">
+                        {% include 'select_tables.html' %} <!-- require tables: dict, t: str -->
+                    </div>
+                    <div class="btn-group w-100"></div>
+                    {% if total > 0 %}
+                    <div class="btn-group ml-1">
+                        <a href="/unloading/start?t={{ t | urlencode }}&q={{ q | urlencode }}"
+                        class="btn btn-secondary" title="выгрузка" target="_blank">
+                            выгрузить ({{ total | reduce_large_number }})
+                        </a>
                     </div>
                     {% endif %}
                 </div>
             </form>
+            {% if q and total > 0 %}
             <table id="maintable" class="display compact cell-border rawtable" cellspacing="0" width="100%">
                 <thead>
                 <tr>
@@ -73,9 +98,9 @@
                 </thead>
                 <tbody>
                     {% for row in data %}
-                    <tr>
+                    <tr  class="increase">
                         {% for item in row %}
-                        <td>{{ item | tag | safe }}</td>
+                        <td style="text-align: left; padding-left: 5px;">{{ item | tag | safe }}</td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
@@ -90,6 +115,9 @@
                 </tr>
                 </tfoot>
             </table>
+            {% else %}
+            <!-- <img src="images/rover.gif" class="m-auto mb-2 rounded" alt="" style="height: 100px; width: auto;"> -->
+            {% endif %}
         </div>
     </div>
     {% include 'footer.html' %}

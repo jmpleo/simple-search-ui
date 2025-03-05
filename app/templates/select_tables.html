@@ -1,11 +1,12 @@
-<select class="custom-select h-100 btn btn-secondary"
+<select class="custom-select btn btn-secondary"
     id="tableInput"
     name="t"
     title="table for search">
 
     {% for table, details in tables.items() %}
     <option value="{{ table }}" {% if table == t %}selected{% endif %}>
-        {% if table == t %}=>{% endif %} <strong>{{ table }}</strong>
+        <!-- {% if table == t %}=>{% endif %} -->
+        {{ table }}
         {% if details is not none and 'count' in details %}
             ({{ details.count | reduce_large_number }})
         {% else %}

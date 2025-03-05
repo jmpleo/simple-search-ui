@@ -2,10 +2,11 @@ from typing import List, Dict, Any
 from pydantic import Field
 
 from app.schemas.base import BaseTemplateModel
+from app.schemas.task import Task
 
 
 class UnloadingTemplateModel(BaseTemplateModel):
-    data: List[Dict[str, Any]] = Field(default_factory=list)
+    data: List[Task] = Field([])
     tables: Dict[str, Dict[str, Any]]
     t: str
     q: str = ''

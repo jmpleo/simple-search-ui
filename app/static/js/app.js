@@ -94,4 +94,8 @@ $(document).ready(function () {
         });
     });
 
+    firstCol = document.querySelector('th');
+    if (firstCol) {
+        firstCol.click();
+    }
 });

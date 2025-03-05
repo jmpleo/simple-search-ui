@@ -1,5 +1,5 @@
-from fastapi import Request, APIRouter, Depends
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import Request, APIRouter, Depends, Query
+from fastapi.responses import HTMLResponse
 
 from app.templates import templates
 from app.config import settings
@@ -14,19 +14,14 @@ from app.dependencies.service import get_manticore_service
 router = APIRouter()
 
 
-@router.get("/")
-async def read_root():
-    return RedirectResponse(url='/search')
-
-
-@router.get("/search", response_class=HTMLResponse)
+@router.get("", response_class=HTMLResponse)
 async def search(
     request: Request,
-    t: str = '',
-    q: str = '',
-    p: int = 0,
-    l: int = settings.limit_records_on_page,
-    mm: int = settings.manticore_matches_default,
+    t: str = Query(settings.manticore_default_table),
+    q: str = Query(''),
+    p: int = Query(0),
+    l: int = Query(settings.limit_records_on_page),
+    mm: int = Query(settings.manticore_matches_default),
     manticore_service: ManticoreService = Depends(get_manticore_service)
 ):
 

@@ -17,7 +17,8 @@ def create_start_app_handler(
         app.state.storage_service = StorageService()
         app.state.manticore_service = ManticoreService()
 
-        await app.state.task_service.delete_all_tasks()
+        if settings.cleaning_start:
+            await app.state.task_service.delete_all_tasks()
 
     return start_app
 
@@ -25,6 +26,7 @@ def create_start_app_handler(
 def create_stop_app_handler(app: FastAPI) -> Callable:  # type: ignore
     @logger.catch
     async def stop_app() -> None:
-        await app.state.task_service.delete_all_tasks()
+        # await app.state.task_service.delete_all_tasks()
+        pass
 
     return stop_app

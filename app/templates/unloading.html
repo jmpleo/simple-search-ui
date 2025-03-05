@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     {% include 'styles.html' %}
-    <title>{{ name }}</title>
+    <title>{{ name }}{% if q %}-{{ q }}{% endif %}</title>
 </head>
 <body class="container mt-2">
     <div class="card text-center">
@@ -13,20 +13,24 @@
         <div class="card-body p-2">
             {% include 'spin.html' %}
             {% include 'error.html' %}
-            <form class="form-inline" id="unloadForm"> <!-- method="GET" action="/unloading/start"-->
-                <div class="input-group my-2 mx-auto w-100">
+            <form class="form-inline mt-2" id="unloadForm"> <!-- method="GET" action="/unloading/start"-->
+                <div class="input-group mb-3 mx-auto w-100">
+                {% include 'dragarea.html' %}
+                </div>
+                <div class="input-group mb-3 mx-auto w-100">
                     <div class="btn-group w-100">
-                        {% include 'select_tables.html' %} <!-- require tables: dict, t: str -->
-                        <input type="text" class="form-control" name="q" id="queryInput" value="{{ q }}"
-                            placeholder="жми на '?', чтобы узнать синтаксис полнотекстового запроса">
                         <a href="https://manual.manticoresearch.com/Searching/Full_text_matching/Operators"
                          class="btn btn-secondary" target="_blank">?</a>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" type="submit">выгрузить</button>
+                        <input type="text" class="form-control" name="q" id="queryInput" value="{{ q }}"
+                            placeholder="жми на '?', чтобы узнать синтаксис полнотекстового запроса">
+                         <button class="btn btn-secondary" type="submit">|></button>
                     </div>
                 </div>
+                <div class="input-group mb-4 mx-auto w-100">
+                    {% include 'select_tables.html' %} <!-- require tables: dict, t: str -->
+                </div>
             </form>
+            {% if data | length > 0 %}
             <table id="maintable" class="display compact cell-border" cellspacing="0" width="100%">
             <!--table class="table table-striped mt-2" id="unloadingTable"-->
                 <thead>
@@ -37,29 +41,91 @@
                 </thead>
                 <tbody>
                     {% for task in data %}
-                    <tr>
+                    <tr id="{{ task.task_id }}">
                         <td style="text-align: left; margin-left: 3px;">
-                            <code class="query">{{ task.info.q }}</code>
-                            <a href="#" class="btn btn-secondary btn-sm disabled" tabindex="-1" aria-disabled="true">
-                            {{ task.info.t }}
-                            </a>
+                            <span style="display: none;">
+                            {% if task.type == 'single' %}a
+                            {% elif task.type == 'pack' %}z
+                            {% endif %}
+                            {{ task.start_time }}
+                            </span>
+
+                            {% if task.type == 'single' %}
+                            <a href="/search?t={{ task.info.t }}&q={{ task.info.q | urlencode }}"
+                                target="_blank"><code class="query">{{ task.info.q }}</code></a>
+                            <a href="#" class="badge btn btn-secondary tag btn-sm disabled"
+                                tabindex="-1" aria-disabled="true">{{ task.info.t | tag }}</a>
+                                {% if task.info.tag %}
+                                <a class="badge btn btn-secondary tag btn-sm disabled"
+                                    tabindex="-1" aria-disabled="true">{{ task.info.tag | tag }}</a>
+                                {% endif %}
+                            {% elif task.type == 'pack' %}
+                            <a class="btn btn-secondary tag btn-sm disabled"
+                                tabindex="-1" aria-disabled="true">{{ task.info.filename | tag }}</a>
+                            {% endif %}
                         </td>
                         <td>
-                            <div class="taskprocess" data-task-id="{{ task.task_id }}">
-                                <a href="#" class="btn btn-secondary btn-sm disabled taskworking" style="display: none" tabindex="-1" aria-disabled="true">
+                            {% if task.result %}
+                            <div class="task-completed" data-task-id="{{ task.task_id }}">
+                                <a href="#" class="badge btn btn-secondary btn-sm disabled task-progress" tabindex="-1" aria-disabled="true">
+                                    {{ task.start_time | execution_time(task.end_time) }}
                                 </a>
-                                <a href="#" class="btn btn-secondary btn-sm disabled tasktotal" tabindex="-1" aria-disabled="true" style="display: none">
+                                {% if task.result.error %}
+                                <a class="badge badge-danger btn btn-sm task-error" href="/unloading?t={{ t | urlencode }}&error={{ task.result.data }}">
+                                    ошибочка
                                 </a>
-                                <a class="badge badge-danger btn btn-sm taskerror" style="display: none">
-                                    error
+                                {% else %}
+                                    <a href="#" class="badge btn btn-secondary btn-sm disabled task-total" tabindex="-1" aria-disabled="true" >
+                                        строк: {{ task.result.data.total | reduce_large_number }}
+                                    </a>
+                                    {% if task.result.data.total %}
+                                        {% if task.type == 'single' %}
+                                        <a href="/unloading/data/{{ task.task_id | urlencode }}.json" class="btn btn-secondary btn-sm task-json">
+                                            json
+                                        </a>
+                                        <a href="/unloading/data/{{ task.task_id | urlencode }}.csv" class="btn btn-secondary btn-sm task-csv">
+                                            csv
+                                        </a>
+                                        {% elif task.type == 'pack' %}
+                                        <a href="/unloading/data/{{ task.task_id | urlencode }}.zip" class="btn btn-secondary btn-sm task-zip">
+                                            zip
+                                        </a>
+                                        {% endif %}
+                                    {% else %}
+                                    {% endif %}
+                                    <a class="badge badge-danger btn btn-sm disabled task-error " style="display: none" tabindex="-1" aria-disabled="true" >
+                                    </a>
+                                {% endif %}
+                                <!-- <a class="badge badge-danger btn btn-sm task-rm">
+                                    удалить
+                                </a> -->
+                            </div>
+                            {% else %}
+                            <div class="task-in-progress" data-task-id="{{ task.task_id }}">
+                                <div class="ball-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+                                <a href="#" class="badge btn btn-secondary btn-sm disabled task-progress" style="display: none" tabindex="-1" aria-disabled="true">0s</a>
+                                <a href="#" class="badge btn btn-secondary btn-sm disabled task-total" style="display: none" tabindex="-1" aria-disabled="true" >
                                 </a>
-                                <a href="/unloading/data/{{ task.task_id | urlencode }}.json" class="btn btn-secondary btn-sm taskjson" style="display: none">
+                                {% if task.type == 'single' %}
+                                <a href="/unloading/data/{{ task.task_id | urlencode }}.json" style="display: none" class="btn btn-secondary btn-sm task-json">
                                     json
                                 </a>
-                                <a href="/unloading/data/{{ task.task_id | urlencode }}.csv" class="btn btn-secondary btn-sm taskcsv" style="display: none">
+                                <a href="/unloading/data/{{ task.task_id | urlencode }}.csv" style="display: none" class="btn btn-secondary btn-sm task-csv">
                                     csv
                                 </a>
+                                {% elif task.type == 'pack' %}
+                                <a href="/unloading/data/{{ task.task_id | urlencode }}.zip" style="display: none" class="btn btn-secondary btn-sm task-zip">
+                                    zip
+                                </a>
+                                {% endif %}
+                                <a class="badge badge-danger btn btn-sm task-error" style="display: none" title="">
+                                    ошибочка
+                                </a>
+                                <!-- <a style="display: none" class="badge badge-danger btn btn-sm task-rm">
+                                    удалить
+                                </a> -->
                             </div>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -71,6 +137,7 @@
                     </tr>
                 </tfoot>
             </table>
+            {% endif %}
         </div>
     </div>
     {% include 'footer.html' %}

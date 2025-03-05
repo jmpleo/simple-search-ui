@@ -3,11 +3,10 @@ import logging
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from app.views.api import router as api_router
-from app.views.search import router as search_router
-from app.views.unloading import router as unloading_router
 
-from app.api.v1.endpoints import router as api_v1_router
+from app.api.api import router as api_router
+from app.views.root import router as view_router
+
 from app.events import create_start_app_handler, create_stop_app_handler
 from app.config import settings
 
@@ -44,9 +43,7 @@ def get_application() -> FastAPI:
     )
 
     application.include_router(api_router)
-    application.include_router(search_router)
-    application.include_router(unloading_router)
-    application.include_router(api_v1_router)
+    application.include_router(view_router)
 
     return application
 
